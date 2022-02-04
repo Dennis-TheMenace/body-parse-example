@@ -5,13 +5,53 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
-    const handleResponse = (response) => {
+    const handleResponse = async(response) => {
       const content = document.querySelector('#content');
       
+      switch(response.status)
+      {
+        case 200:
+          content.innerHTML = '<b>Success</b>';
+          break;
+        case 201:
+          content.innerHTML = '<b>Created</b>';
+          break;
+        case 204:
+          content.innerHTML = '<b>Updated (No Content)</b>';
+          return;
+        case 400:
+          content.innerHTML = '<b>Bad Request</b>';
+          break;
+        default:
+          content.innerHTML = '<b>Status code not implemented by client</b>';
+          break;
+      }
+
+      let obj = await response.json();
+      if(obj.message)
+      {
+        content.innerHTML += `<p>${obj.message}</p>`
+      }
     };
 
-    const sendPost = (nameForm) => {
+    const sendPost = async(nameForm) => {
+      const name = nameForm.querySelector('#nameField').value;
+      const age = nameForm.querySelector('#ageField').value;
 
+      const formData = `name=${name}&age=${age}`;
+
+      const response = await fetch('/addUser', 
+      {
+        method: 'POST',
+        headers: 
+        {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accpet': 'application/json',
+        },
+        body: formData,
+      });
+
+      handleResponse(response);
     };
 
     const init = () => {

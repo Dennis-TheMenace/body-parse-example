@@ -24,30 +24,26 @@ const getUsers = (request, response) => {
 };
 
 const addUser = (request, response, body) => {
-  const resonseJSON =
-  {
-    message: "Name and age are both required",
+  const responseJSON = {
+    message: 'Name and age are both required',
   };
 
-  if(!body.name || !body.age)
-  {
-    resonseJSON.id = 'addUserMissingParams';
+  if (!body.name || !body.age) {
+    responseJSON.id = 'addUserMissingParams';
     return respondJSON(request, response, 400, responseJSON);
   }
 
   let responseCode = 204;
-           
-  if(!users[body.name])
-  {
+
+  if (!users[body.name]) {
     responseCode = 201;
     users[body.name] = {};
   }
 
   users[body.name].name = body.name;
-  users[body.age].age = body.age;
+  users[body.name].age = body.age;
 
-  if(responseCode === 201)
-  {
+  if (responseCode === 201) {
     responseJSON.message = 'Created Successfully';
     return respondJSON(request, response, responseCode, responseJSON);
   }
